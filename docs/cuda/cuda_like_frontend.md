@@ -22,7 +22,7 @@ zkCUDA is specialized for highly parallelizable computation, where it's another 
 Instead of processing a un-structured computation, zkCUDA compiler makes your computation more structured to prover and with a $O(\log{N})$ faster algorithm combined, the result is a much faster and cheaper proof system.
 
 <div align="center">
-  <img src="https://github.com/PolyhedraZK/ExpanderDocs/blob/main/docs/cuda/fig1.1.svg" alt="Figure 1.1" height="300" />
+  <img src="https://raw.githubusercontent.com/PolyhedraZK/ExpanderDocs/refs/heads/main/docs/cuda/fig1.1.svg" alt="Figure 1.1" height="300" />
   <p>Figure 1.1: Expander Execution Diagram</p>
 </div>
 
