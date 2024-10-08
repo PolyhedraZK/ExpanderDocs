@@ -4,11 +4,11 @@ sidebar_position: 3
 
 # Compiler APIs
 
-This document offers a comprehensive guide to the core APIs provided by the compiler.
+This guide provides a comprehensive overview of the core APIs offered by the compiler.
 
 ## Root Package
 
-To integrate the compiler into your Go project, add the following import statement to your code:
+To integrate the compiler into your Go project, include the following import statement in your code:
 
 ```go
 import "github.com/PolyhedraZK/ExpanderCompilerCollection/ecgo"
@@ -16,25 +16,25 @@ import "github.com/PolyhedraZK/ExpanderCompilerCollection/ecgo"
 
 ### Compile Function
 
-The `ecgo.Compile` method is the primary interface to the compiler. It takes a `frontend.Circuit` as input and returns a `CompileResult`.
+The `ecgo.Compile` function serves as the primary interface to the compiler. It accepts a `frontend.Circuit` as input and returns a `CompileResult`.
 
 ### CompileResult Structure
 
-The `ecgo.CompileResult` structure encapsulates the results of the compilation process, which includes both the layered circuit and the intermediate representation (IR).
+The `ecgo.CompileResult` structure encapsulates the compilation process outputs, including both the layered circuit and the intermediate representation (IR).
 
-The `CompileResult` provides three methods for accessing the data:
+The `CompileResult` offers three methods to access the data:
 
-1. `GetCircuitIr`: This method retrieves the IR.
-2. `GetLayeredCircuit`: This method fetches the layered circuit.
-3. `GetInputSolver()`: This method obtains the compiled witness solver of the circuit.
+1. `GetCircuitIr()`: Retrieves the IR.
+2. `GetLayeredCircuit()`: Fetches the layered circuit.
+3. `GetInputSolver()`: Obtains the compiled witness solver of the circuit.
 
 ### Builder API
 
-The `ecgo.API` serves as the interface for the builder API. It extends the `frontend.API` interface from gnark, offering additional features such as support for sub-circuits and utility functions.
+The `ecgo.API` serves as the interface for the builder API. It extends the `frontend.API` interface from gnark, providing additional features such as support for sub-circuits and utility functions.
 
 ## Sub-Circuit API
 
-The functionality of sub-circuits is enabled via the following methods:
+Sub-circuit functionality is enabled through the following methods:
 
 ```go
 type SubCircuitSimpleFunc func(api frontend.API, input []frontend.Variable) []frontend.Variable
@@ -46,11 +46,11 @@ type SubCircuitAPI interface {
 }
 ```
 
-`SubCircuitFunc` is designed to accommodate any function that takes simple types and `frontend.Variable` as inputs and returns `frontend.Variable` as the output.
+`SubCircuitFunc` is designed to accommodate any function that takes simple types and `frontend.Variable` as inputs and returns `frontend.Variable` as output.
 
-For example, a function with the signature `func(frontend.API, int, uint8, [][]frontend.Variable, string, ...[]frontend.Variable) [][][]frontend.Variable` would be considered a `SubCircuitFunc`.
+For example, a function with the signature `func(frontend.API, int, uint8, [][]frontend.Variable, string, ...[]frontend.Variable) [][][]frontend.Variable` would be considered a valid `SubCircuitFunc`.
 
-One key requirement for `SubCircuitFunc` is determinism. This means that for any given set of identical simple-type inputs, the output must always be the same. This is crucial because the compiler memorizes the wiring of sub-circuit calls and reuses these memorized results for identical inputs, enhancing efficiency.
+A key requirement for `SubCircuitFunc` is determinism: for any given set of identical simple-type inputs, the output must always be the same. This is crucial because the compiler memorizes the wiring of sub-circuit calls and reuses these memorized results for identical inputs, enhancing efficiency.
 
 ## Additional APIs
 
@@ -62,11 +62,11 @@ type API interface {
 }
 ```
 
-- `Output`: This method appends a variable to the circuit's output. It is typically used to designate certain variables as public outputs of the circuit.
-- `GetRandomValue`: This method retrieves a random value directly, a more efficient approach than generating pseudo-random numbers using a hash function. This direct access to random numbers is facilitated by the Libra proving process.
-- `CustomGate`: This method is similar to Gnark's `NewHint` in that it essentially calls a hint function to compute a result. In the resulting layered circuit, it will be compiled into a custom gate of the specified gate type. Unlike `NewHint`, it requires pre-registering the hint function and other parameters. For specific details, see [the example](https://github.com/PolyhedraZK/ExpanderCompilerCollection/blob/master/ecgo/examples/custom_gate/main.go).
+- `Output`: Appends a variable to the circuit's output. Typically used to designate certain variables as public outputs of the circuit.
+- `GetRandomValue`: Retrieves a random value directly, offering a more efficient approach than generating pseudo-random numbers using a hash function. This direct access to random numbers is facilitated by the Libra proving process.
+- `CustomGate`: Similar to Gnark's `NewHint`, this method essentially calls a hint function to compute a result. In the resulting layered circuit, it will be compiled into a custom gate of the specified gate type. Unlike `NewHint`, it requires pre-registering the hint function and other parameters. For specific details, refer to this example.
 
-Several other APIs exist for old pure Golang Expander Compiler compability, but they are no-op now.
+Several other APIs exist for compatibility with the old pure Golang Expander Compiler, but they are currently no-op.
 
 ## Builder Extensions
 
@@ -81,7 +81,7 @@ func Memorized2DFunc(f SubCircuitFunc) func(frontend.API, ...interface{}) [][]fr
 func Memorized3DFunc(f SubCircuitFunc) func(frontend.API, ...interface{}) [][][]frontend.Variable
 ```
 
-These function wrappers serve as syntactic convenience for `MemorizedCall`, streamlining its usage. For instance, the invocations below are functionally identical:
+These function wrappers serve as syntactic conveniences for `MemorizedCall`, streamlining its usage. For instance, the following invocations are functionally equivalent:
 
 ```go
 output := api.MemorizedSimpleCall(f, input)

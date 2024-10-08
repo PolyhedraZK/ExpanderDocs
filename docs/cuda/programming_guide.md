@@ -4,11 +4,11 @@ sidebar_position: 2
 
 # Programming Guide [WIP]
 
-It's still working in progress, not usable now, and the APIs may change in the future. Please raise issue in github if you have any questions or suggestions.
+Note: This guide is a work in progress. The APIs described here are subject to change. Please raise an issue on GitHub if you have any questions or suggestions.
 
 ## 1. Kernel Function Definition
 
-The kernel function in this CUDA-like circuit frontend is similar to a CUDA kernel. It aligns with the current type of memorize call functions. This function will run under Zero-Knowledge (ZK) conditions, with the proof automatically maintained by contexts.
+The kernel function in this CUDA-like circuit frontend is analogous to a CUDA kernel. It aligns with the current type of memorize call functions. This function operates under Zero-Knowledge (ZK) conditions, with the proof automatically maintained by contexts.
 
 ```rust
 fn example_kernel<C: Config>(api: &mut API<C>, inputs: &[&[Variable]]) -> Vec<Variable> {
@@ -16,7 +16,7 @@ fn example_kernel<C: Config>(api: &mut API<C>, inputs: &[&[Variable]]) -> Vec<Va
 }
 ```
 
-Functions with more complex parameters might look like the following:
+For functions with more complex parameters, you might use the following structure:
 
 ```rust
 #[kernel]
@@ -30,7 +30,7 @@ fn complex_kernel<C: Config>(
 
 ## 2. Context
 
-The context automatically maintains the existing proof and commits the input variables. It provides a series of functions as follows:
+The context automatically maintains the existing proof and commits the input variables. It provides the following functions:
 
 ```rust
 fn init_ctx<C: Config>() -> Context<C> {
@@ -42,11 +42,18 @@ impl<C: Config> Context<C> {
         // Implementation
     }
 
-    fn copy_to_host<T: FromFlattenedFieldAndShape<C>>(&self, dev_mem: &DeviceMemory<C>) -> T {
+    fn copy_to_host<T: FromFlattenedFieldAndShape<C>>(
+        &self,
+        dev_mem: &DeviceMemory<C>,
+    ) -> T {
         // Implementation
     }
 
-    fn call_kernel<F>(&mut self, f: F, inputs: &[DeviceMemory<C>]) -> Result<DeviceMemory<C>, KernelError>
+    fn call_kernel<F>(
+        &mut self,
+        f: F,
+        inputs: &[DeviceMemory<C>],
+    ) -> Result<DeviceMemory<C>, KernelError>
     where
         F: Fn(&mut API<C>, &[&[Variable]]) -> Vec<Variable>,
     {
@@ -61,7 +68,7 @@ impl<C: Config> Context<C> {
 
 ## 3. DeviceMemory
 
-The `DeviceMemory<C>` struct represents memory on the device (in this case, the ZK circuit). It has the following internal structure:
+The `DeviceMemory<C>` struct represents memory on the device (in this case, the ZK circuit). Its internal structure is as follows:
 
 ```rust
 struct DeviceMemory<C: Config> {
@@ -114,21 +121,58 @@ The Kernel API, also known as ExpanderCompilerCollection (ECC), provides a build
 
 ```rust
 pub trait BasicAPI<C: Config> {
-    fn add(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn sub(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn mul(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn div(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>, checked: bool) -> Variable;
+    fn add(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
+    fn sub(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
+    fn mul(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
+    fn div(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+        checked: bool,
+    ) -> Variable;
     fn neg(&mut self, x: impl ToVariableOrValue<C::CircuitField>) -> Variable;
     fn inverse(&mut self, x: impl ToVariableOrValue<C::CircuitField>) -> Variable;
     fn is_zero(&mut self, x: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn xor(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn or(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
-    fn and(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>) -> Variable;
+    fn xor(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
+    fn or(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
+    fn and(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    ) -> Variable;
     fn assert_is_zero(&mut self, x: impl ToVariableOrValue<C::CircuitField>);
     fn assert_is_non_zero(&mut self, x: impl ToVariableOrValue<C::CircuitField>);
     fn assert_is_bool(&mut self, x: impl ToVariableOrValue<C::CircuitField>);
-    fn assert_is_equal(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>);
-    fn assert_is_different(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>);
+    fn assert_is_equal(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    );
+    fn assert_is_different(
+        &mut self,
+        x: impl ToVariableOrValue<C::CircuitField>,
+        y: impl ToVariableOrValue<C::CircuitField>,
+    );
 }
 ```
 
