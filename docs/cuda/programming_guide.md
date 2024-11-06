@@ -1,3 +1,7 @@
+---
+sidebar_position: 2
+---
+
 # Demo Programming Guide
 
 This document describes the current interface of the zkCuda demo. The related code can be found in [zkcuda](https://github.com/PolyhedraZK/ExpanderCompilerCollection/tree/zkcuda). A complete example is available in [zkcuda_1.rs](https://github.com/PolyhedraZK/ExpanderCompilerCollection/blob/zkcuda/expander_compiler/tests/zkcuda_1.rs).
