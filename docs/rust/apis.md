@@ -67,6 +67,28 @@ pub struct Circuit<T> {
 }
 ```
 
+### Long Arrays
+
+If you need a very long array, you might need to use `Vec` instead of a fixed-size array in the structure. Due to Rust's limitations, the syntax for this definition is slightly different from that of `Vec`:
+
+```rust
+declare_circuit!(Circuit {
+    x: [[[Variable]]],
+    y: [[Variable]],
+    z: [[[Variable]; 10]]
+});
+```
+
+The actual structure definition will look like this:
+
+```rust
+pub struct Circuit<T> {
+    pub x: Vec<Vec<Vec<T>>>,
+    pub y: Vec<Vec<T>>,
+    pub z: Vec<[Vec<T>; 10]>,
+}
+```
+
 ## API Overview
 
 The API is similar to `gnark`'s frontend API. `C` represents the configuration for the specified field.
@@ -102,6 +124,7 @@ pub trait BasicAPI<C: Config> {
     fn assert_is_bool(&mut self, x: impl ToVariableOrValue<C::CircuitField>);
     fn assert_is_equal(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>);
     fn assert_is_different(&mut self, x: impl ToVariableOrValue<C::CircuitField>, y: impl ToVariableOrValue<C::CircuitField>);
+    fn get_random_value(&mut self) -> Variable;
 }
 ```
 
