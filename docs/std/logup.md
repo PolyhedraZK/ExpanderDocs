@@ -7,7 +7,7 @@ A LogUp circuit verifies the query of a table, ensuring the result is correct, a
 
 ![lookup](../../static/img/lookup.png)
 
-Let's say we have a table of $N$ values, denoted as $t_i, i\in [T]$, and we have $M$ queries of the table, whose results are denoted as $q_j, j\in [M]$, we'd like to proving the following relationship:
+Let's say we have a table of $N$ values, denoted as $t_i, i\in [N]$, and we have $M$ queries of the table, whose results are denoted as $q_j, j\in [M]$. To check all the query results are correct, we'd like to prove the following relationship:
 
 There exists $c_i, i\in [T]$, s.t.
 
@@ -18,7 +18,7 @@ $$
 Thanks to the Schwartz–Zippel lemma, we can sample a random value $\alpha\in\mathbb{F}$ and conclude that the two polynomials are equal with high probability if they agree at $\alpha$.
 
 ## Concrete Definition
-In practice, things get a little more complex since the query key can be arbitrary, and there might be more than one values in the row of a table.
+In practice, things get a little more complex since the query key can be arbitrarily long, and there might be more than one values in the row of a table.
 
 ```rust
 pub struct LogUpParams {
@@ -43,7 +43,7 @@ declare_circuit!(_LogUpCircuit {
 
 We fully parameterized this, allowing arbitrary ```key_len```, ```value_len```, ```n_table_rows```, and ```n_queries```.
 
-## Circuit Short Explaination
+## Circuit Structure: Short Explaination
 1. ```table_keys``` and ```table_values``` are concated in the second dimension.
 2. ```query_keys``` and ```query_values``` are concated in the second dimension.
 3. The second dimension will be reduced to a single value with randomness.
@@ -52,6 +52,7 @@ We fully parameterized this, allowing arbitrary ```key_len```, ```value_len```, 
 Thanks to the [Expander](https://github.com/PolyhedraZK/Expander) prover, we're able to use random gate in the construction of the ciruict, whose value will be filled via fiat-shamir hash in proving. 
 
 ## Test
+Below is a small test of the logup circuit:
 ```rust
 #[test]
 fn logup_test() {
@@ -68,4 +69,4 @@ fn logup_test() {
 }
 ```
 
-To see how ```circuit_test_helper``` is defined, please refer to our documentation of the [std library](../rust/std.md)
+To see how ```circuit_test_helper``` is defined, please refer to our documentation of the [std library](../rust/std.md).
